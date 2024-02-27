@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "126985457060",
+    "project_id": "eddureactnative",
+    "storage_bucket": "eddureactnative.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:126985457060:android:9e5f585666159c01a58531",
+        "android_client_info": {
+          "package_name": "com.class_06"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWAXi4CQEQNt14DrqShvBsE302-r34h9Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
