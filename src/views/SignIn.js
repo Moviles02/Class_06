@@ -1,58 +1,93 @@
 /* eslint-disable prettier/prettier */
-// SignIn.js
 import React, { useState } from 'react';
-import { View, TextInput, Button, Text, TouchableOpacity } from 'react-native';
+import { View, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import auth from '@react-native-firebase/auth';
-import { styles } from '../styles/styles'; // Asegúrate de que la ruta sea correcta
 
-const SignIn = ({ navigation }) => {
+const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
 
-  const handleSignIn = async () => {
+  const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert('Error', 'Por favor, ingresa tu correo electrónico y contraseña');
+      return;
+    }
+
     try {
       await auth().signInWithEmailAndPassword(email, password);
-      // Navegar a la pantalla principal después del inicio de sesión.
+      // Navegación hacia el menú principal tras el inicio de sesión exitoso
+      navigation.navigate('MainMenu'); // Reemplaza 'MainMenu' con el nombre de tu ruta del menú principal
     } catch (e) {
-      setError(e.message);
+      console.error(e);
+      let errorMessage;
+      switch (e.code) {
+        case 'auth/invalid-email':
+          errorMessage = 'El correo electrónico no es válido.';
+          break;
+        case 'auth/user-disabled':
+          errorMessage = 'El usuario ha sido deshabilitado.';
+          break;
+        case 'auth/user-not-found':
+          errorMessage = 'No se encontró usuario con ese correo electrónico.';
+          break;
+        case 'auth/wrong-password':
+          errorMessage = 'La contraseña es incorrecta.';
+          break;
+        default:
+          errorMessage = 'Ha ocurrido un error al intentar iniciar sesión.';
+          break;
+      }
+      Alert.alert('Error de inicio de sesión', errorMessage);
     }
   };
 
-  const navigateToSignUp = () => {
-    navigation.navigate('SignUp'); // Asegúrate de que 'SignUp' es el nombre correcto de la ruta de tu pantalla de registro.
-  };
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Inicio de sesión</Text>
       <TextInput
         style={styles.input}
-        placeholder="Email"
+        placeholder="Correo electrónico"
         value={email}
         onChangeText={setEmail}
+        keyboardType="email-address"
+        autoCapitalize="none"
       />
       <TextInput
         style={styles.input}
-        placeholder="Password"
+        placeholder="Contraseña"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
       />
-      {error ? <Text style={styles.error}>{error}</Text> : null}
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={handleSignIn}>
-          <Text style={styles.buttonText}>Sign In</Text>
-        </TouchableOpacity>
-      </View>
-      <Text 
-        style={styles.linkText} 
-        onPress={navigateToSignUp}
-      >
-        ¿No tienes una cuenta? Regístrate
-      </Text>
+      <Button
+        title="Iniciar Sesión"
+        onPress={handleLogin}
+      />
+      <Button
+        title="¿No tienes una cuenta? Regístrate"
+        onPress={() => navigation.navigate('SignUp')} // Asegúrate de que 'SignUp' es el nombre de tu ruta de registro
+      />
     </View>
   );
-
 };
 
-export default SignIn;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+
+  },
+  input: {
+
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+    color: 'black',
+    backgroundColor:'#A0A0A0'
+
+  },
+});
+
+export default Login;
